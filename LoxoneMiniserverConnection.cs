@@ -218,6 +218,11 @@ namespace Loxone.Api
             // dass der Miniserver das Verbindungslimit erreicht, Code 901).
             _keepAliveTimer.Stop();
 
+            // PERF: gemeinsamen HttpClient der WebApi freigeben, damit
+            // beim Reconnect keine Socket-Pools der alten Verbindung
+            // liegenbleiben.
+            webApi.Dispose();
+
             _webSocket.OnStateChanged -= _webSocket_OnStateChanged;
             _webSocket.OnMessage -= _webSocket_OnMessage;
             _webSocket.OnClosed -= _webSocket_OnClosed;

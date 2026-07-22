@@ -12,9 +12,18 @@ using System.Threading.Tasks;
 
 namespace Loxone.Driver.Api
 {
-    public class LoxoneWebApi
+    public class LoxoneWebApi : IDisposable
     {
         private readonly string _password;
+
+        // PERF: EIN HttpClient pro LoxoneWebApi-Instanz statt pro
+        // Request. Der bisherige "new HttpClient() + using" pro Aufruf ist
+        // das bekannte Socket-Exhaustion-Antipattern (jeder Client laesst
+        // TCP-Verbindungen im TIME_WAIT zurueck) und verhindert
+        // HTTP-Keep-Alive. Threadsicher fuer parallele Requests; die Header
+        // (Basic Auth, Accept) sind konstant, da BaseAddress/User/Passwort
+        // readonly sind.
+        private readonly HttpClient _client;
 
         public string BaseAddress { get; }
         public string User { get; }
@@ -24,7 +33,19 @@ namespace Loxone.Driver.Api
             BaseAddress = baseAddress;
             User = user;
             _password = password;
+            _client = SetupClient();
         }
+
+        /// <summary>
+        /// Gibt den gemeinsam genutzten HttpClient frei. Wird von
+        /// LoxoneMiniserverConnection.Close() aufgerufen, damit beim
+        /// Reconnect keine Socket-Pools der alten Verbindung liegenbleiben.
+        /// </summary>
+        public void Dispose()
+        {
+            _client.Dispose();
+        }
+
         private HttpClient SetupClient()
         {
             // Three versions in one.
@@ -43,9 +64,9 @@ namespace Loxone.Driver.Api
         public async Task<LoxoneApiResponse<T>> GetRequest<T>(string apiUrl) where T : LoxoneApiResponseLL
         {
             LoxoneApiResponse<T> result = null;
-            using (var client = SetupClient())
             {
-                var response = await client.GetAsync(new Uri(new Uri(BaseAddress), apiUrl)).ConfigureAwait(false);
+                // PERF: gemeinsamer _client statt Client pro Request.
+                var response = await _client.GetAsync(new Uri(new Uri(BaseAddress), apiUrl)).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
@@ -64,9 +85,9 @@ namespace Loxone.Driver.Api
         public async Task<T> GetBasicAuthRequest<T>(string apiUrl) where T : class
         {
             T result = null;
-            using (var client = SetupClient())
             {
-                var response = await client.GetAsync(new Uri(new Uri(BaseAddress), apiUrl)).ConfigureAwait(false);
+                // PERF: gemeinsamer _client statt Client pro Request.
+                var response = await _client.GetAsync(new Uri(new Uri(BaseAddress), apiUrl)).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
@@ -84,9 +105,9 @@ namespace Loxone.Driver.Api
         public async Task<object> GetRequest(string apiUrl)
         {
             object result = null;
-            using (var client = SetupClient())
             {
-                var response = await client.GetAsync(new Uri(new Uri(BaseAddress), apiUrl)).ConfigureAwait(false);
+                // PERF: gemeinsamer _client statt Client pro Request.
+                var response = await _client.GetAsync(new Uri(new Uri(BaseAddress), apiUrl)).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
 
