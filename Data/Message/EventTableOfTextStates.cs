@@ -46,7 +46,7 @@ namespace Loxone.Api.Data.Message
                 Values.Add(lUuid, new TextEventData(lUuidIcon, text));
                 pos += (16 + 16 + 4 + (int)textLength);
 
-                if(paddingBytes > 0)
+                if (paddingBytes > 0)
                 {
                     pos += 4 - paddingBytes;
                 }

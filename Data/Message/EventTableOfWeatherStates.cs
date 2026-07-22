@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Loxone.Api.Data.Message
 {
@@ -25,7 +24,7 @@ namespace Loxone.Api.Data.Message
         }
         public static WeatherEntry Parse(Span<byte> data)
         {
-            if(data.Length != LoxoneStructLength)
+            if (data.Length != LoxoneStructLength)
             {
                 throw new ArgumentException($"{nameof(WeatherEntry)} must have a length of {LoxoneStructLength}");
             }
@@ -37,20 +36,20 @@ namespace Loxone.Api.Data.Message
             var temperature = data.Slice(20, 8);
             var perceivedTemperature = data.Slice(28, 8);
             var dewPoint = data.Slice(36, 8);
-            var precipitation= data.Slice(44, 8);
+            var precipitation = data.Slice(44, 8);
             var windSpeed = data.Slice(52, 8);
             var barometicPressure = data.Slice(60, 8);
 
-            return new WeatherEntry(BitConverter.ToInt32(timestamp.ToArray(),0), 
-                BitConverter.ToInt32(weatherType.ToArray(),0), 
-                BitConverter.ToInt32(windDirection.ToArray(), 0), 
-                BitConverter.ToInt32(solarRadiation.ToArray(), 0), 
-                BitConverter.ToInt32(relativeHumidty.ToArray(), 0), 
-                BitConverter.ToDouble(temperature.ToArray(), 0), 
-                BitConverter.ToDouble(perceivedTemperature.ToArray(), 0), 
-                BitConverter.ToDouble(dewPoint.ToArray(), 0), 
-                BitConverter.ToDouble(precipitation.ToArray(), 0), 
-                BitConverter.ToDouble(windSpeed.ToArray(), 0), 
+            return new WeatherEntry(BitConverter.ToInt32(timestamp.ToArray(), 0),
+                BitConverter.ToInt32(weatherType.ToArray(), 0),
+                BitConverter.ToInt32(windDirection.ToArray(), 0),
+                BitConverter.ToInt32(solarRadiation.ToArray(), 0),
+                BitConverter.ToInt32(relativeHumidty.ToArray(), 0),
+                BitConverter.ToDouble(temperature.ToArray(), 0),
+                BitConverter.ToDouble(perceivedTemperature.ToArray(), 0),
+                BitConverter.ToDouble(dewPoint.ToArray(), 0),
+                BitConverter.ToDouble(precipitation.ToArray(), 0),
+                BitConverter.ToDouble(windSpeed.ToArray(), 0),
                 BitConverter.ToDouble(barometicPressure.ToArray(), 0));
         }
 

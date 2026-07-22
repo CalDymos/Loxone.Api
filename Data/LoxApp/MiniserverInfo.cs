@@ -1,7 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Loxone.Api.Data.LoxApp
 {
@@ -11,7 +8,7 @@ namespace Loxone.Api.Data.LoxApp
         public string Uuid { get; set; }
         public bool isAdmin { get; set; }
         public bool changePassword { get; set; }
-        public int UserRights { get; set; }
+        public long UserRights { get; set; }
     }
     public class MiniserverInfo
     {

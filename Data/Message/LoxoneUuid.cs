@@ -35,7 +35,7 @@ namespace Loxone.Api.Data.Message
         }
         public override bool Equals(object obj)
         {
-            if(obj is LoxoneUuid uuid)
+            if (obj is LoxoneUuid uuid)
             {
                 return uuid.Uuid == Uuid;
             }

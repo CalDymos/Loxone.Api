@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Loxone.Api.Core;
 using Loxone.Api.Data;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -8,10 +9,10 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using Loxone.Api.Core;
 
-namespace Loxone.Driver.Api {
-	public class LoxoneWebApi
+namespace Loxone.Driver.Api
+{
+    public class LoxoneWebApi
     {
         private readonly string _password;
 
@@ -34,7 +35,7 @@ namespace Loxone.Driver.Api {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(
             Encoding.ASCII.GetBytes(
                 string.Format("{0}:{1}", User, _password))));
-            
+
 
             return client;
         }

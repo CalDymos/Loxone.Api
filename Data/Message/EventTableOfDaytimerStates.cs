@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Loxone.Api.Data.Message
 {
@@ -27,8 +26,8 @@ namespace Loxone.Api.Data.Message
             var to = data.Slice(8, 4);
             var needActivate = data.Slice(12, 4);
             var value = data.Slice(16, 8);
-            
-            return new DaytimerEntry(BitConverter.ToInt32(mode.ToArray(),0), BitConverter.ToInt32(from.ToArray(),0), BitConverter.ToInt32(to.ToArray(),0), BitConverter.ToInt32(needActivate.ToArray(),0), BitConverter.ToDouble(value.ToArray(),0));
+
+            return new DaytimerEntry(BitConverter.ToInt32(mode.ToArray(), 0), BitConverter.ToInt32(from.ToArray(), 0), BitConverter.ToInt32(to.ToArray(), 0), BitConverter.ToInt32(needActivate.ToArray(), 0), BitConverter.ToDouble(value.ToArray(), 0));
         }
 
         public int Mode { get; }
@@ -69,13 +68,13 @@ namespace Loxone.Api.Data.Message
                 var lUuid = new LoxoneUuid(uuid);
 
                 var defaultValue = data.Slice(pos + 16, 8);
-                var defaultValueD = BitConverter.ToDouble(defaultValue.ToArray(),0);
+                var defaultValueD = BitConverter.ToDouble(defaultValue.ToArray(), 0);
 
                 var daytimer = new Daytimer(defaultValueD);
 
-                var entriesCount = BitConverter.ToInt32(data.Slice(pos + 24, 4).ToArray(),0);
+                var entriesCount = BitConverter.ToInt32(data.Slice(pos + 24, 4).ToArray(), 0);
 
-                for(int i  = 0; i < entriesCount; i++)
+                for (int i = 0; i < entriesCount; i++)
                 {
                     var entryData = data.Slice(pos + Daytimer.LoxoneStructLength + (i * DaytimerEntry.LoxoneStructLength), DaytimerEntry.LoxoneStructLength);
                     var daytimerEntry = DaytimerEntry.Parse(entryData);

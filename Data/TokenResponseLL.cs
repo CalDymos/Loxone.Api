@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Loxone.Api.Data
+﻿namespace Loxone.Api.Data
 {
     public class TokenData
     {

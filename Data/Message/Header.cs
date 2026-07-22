@@ -17,11 +17,11 @@ namespace Loxone.Api.Data.Message
     {
         public Header(Span<byte> header)
         {
-            if(header == null)
+            if (header == null)
             {
                 throw new ArgumentException("Header must be set");
             }
-            if(header.Length != 8)
+            if (header.Length != 8)
             {
                 throw new ArgumentException("Header must have size of 8");
             }
@@ -30,7 +30,7 @@ namespace Loxone.Api.Data.Message
             Info = header[2];
 
             var len = header.Slice(4, 4);
-            DataLength = BitConverter.ToUInt32(len.ToArray(), 0);          
+            DataLength = BitConverter.ToUInt32(len.ToArray(), 0);
         }
 
         public HeaderIdentifier Identifier { get; set; }
