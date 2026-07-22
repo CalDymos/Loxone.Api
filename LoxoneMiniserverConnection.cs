@@ -202,8 +202,11 @@ namespace Loxone.Api
                 }
                 return connect;
             }
-            catch (Exception e)
+            catch
             {
+                // CS0168-Fix: Variable entfernt. "catch { throw; }" ist
+                // semantisch identisch zu "catch (Exception e) { throw; }" -
+                // Exception und Stacktrace bleiben unveraendert erhalten.
                 throw;
             }
         }
@@ -471,8 +474,11 @@ namespace Loxone.Api
                     }
                 }
             }
-            catch (System.FormatException formatErr)
+            catch (System.FormatException)
             {
+                // CS0168-Fix: Variablenname entfernt, Verhalten unveraendert -
+                // kein gueltiges Base64 = Nachricht ist unverschluesselt und
+                // wird unveraendert zurueckgegeben (bestehender Fallback).
                 return message;
 
             }
@@ -497,7 +503,10 @@ namespace Loxone.Api
 
 
 
-        private async void _webSocket_OnStateChanged(object sender, System.Net.WebSockets.WebSocketState newState, System.Net.WebSockets.WebSocketState prevState)
+        // CS1998-Fix: "async" entfernt - der Handler enthaelt keine awaits
+        // und lief daher ohnehin vollstaendig synchron. Signatur (void) und
+        // Verhalten unveraendert.
+        private void _webSocket_OnStateChanged(object sender, System.Net.WebSockets.WebSocketState newState, System.Net.WebSockets.WebSocketState prevState)
         {
             if (newState == System.Net.WebSockets.WebSocketState.Open)
             {
